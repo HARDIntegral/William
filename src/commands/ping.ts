@@ -2,59 +2,32 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { ApplicationCommandType, Message } from 'discord.js';
 
+@ApplyOptions<Command.Options>({
+	name: 'ping',
+	description: 'Ping pong',
+	aliases: ['pong']
+})
 export class PingCommand extends Command {
 	// Register Chat Input and Context Menu command
 	public override registerApplicationCommands(registry: Command.Registry) {
 		// Register Chat Input command
 		registry.registerChatInputCommand({
 			name: this.name,
-			description: 'ping pong'
-		});
-
-		// Register Context Menu command available from any message
-		registry.registerContextMenuCommand({
-			name: this.name,
-			type: ApplicationCommandType.Message
-		});
-
-		// Register Context Menu command available from any user
-		registry.registerContextMenuCommand({
-			name: this.name,
-			type: ApplicationCommandType.User
+			description: this.description
 		});
 	}
 
 	// Message command
 	public override async messageRun(message: Message) {
-		return this.sendPing(message);
+		this.sendPing(message);
 	}
 
-	// Chat Input (slash) command
-	public override async chatInputRun(interaction: Command.ChatInputCommandInteraction) {
-		return this.sendPing(interaction);
-	}
-
-	// Context Menu command
-	public override async contextMenuRun(interaction: Command.ContextMenuCommandInteraction) {
-		return this.sendPing(interaction);
-	}
-
-	private async sendPing(interactionOrMessage: Message | Command.ChatInputCommandInteraction | Command.ContextMenuCommandInteraction) {
-		const pingMessage =
-			interactionOrMessage instanceof Message
-				? await interactionOrMessage.channel.send({ content: 'Ping?' })
-				: await interactionOrMessage.reply({ content: 'Ping?', fetchReply: true });
+	private async sendPing(message: Message) {
+		const pingMessage = await message.reply({ content: 'Ping?' });
 
 		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
-			pingMessage.createdTimestamp - interactionOrMessage.createdTimestamp
+			pingMessage.createdTimestamp - message.createdTimestamp
 		}ms.`;
-
-		if (interactionOrMessage instanceof Message) {
-			return pingMessage.edit({ content });
-		}
-
-		return interactionOrMessage.editReply({
-			content
-		});
+		return pingMessage.edit({ content });	
 	}
 }
