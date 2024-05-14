@@ -8,8 +8,9 @@
     "colorette": "^2.0.20",
     "discord.js": "^14.15.2"
   },
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "build": "tsc",
+    "start": "node dist/src/index.js"
   }
 }
