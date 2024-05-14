@@ -1,0 +1,20 @@
+{
+    "name": "William",
+    "description": "Personal Discord Bot",
+    "repository": "https://github.com/jane-doe/small-sharp-tool",
+    "logo": "https://small-sharp-tool.com/logo.svg",
+    "scripts": {
+      "postdeploy": "ts-node ./src/index.ts"
+    },
+    "env": {
+      "DISCROD_TOKEN": {
+        "description": "Token to connect to the Discord API",
+        "value": "5"
+      }
+    },
+    "buildpacks": [
+      {
+        "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest"
+      }
+    ]
+  }
