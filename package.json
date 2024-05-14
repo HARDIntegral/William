@@ -9,9 +9,9 @@
     "discord.js": "^14.15.2",
     "typescript": "^5.4.5"
   },
-  "main": "dist/src/index.js",
+  "main": "app/dist/src/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/index.js"
+    "start": "node app/dist/src/index.js"
   }
 }
