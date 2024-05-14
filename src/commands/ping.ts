@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import { ApplicationCommandType, Message } from 'discord.js';
+import { Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
 	name: 'ping',
