@@ -1,10 +1,8 @@
 {
     "name": "William",
     "description": "Personal Discord Bot",
-    "repository": "https://github.com/jane-doe/small-sharp-tool",
-    "logo": "https://small-sharp-tool.com/logo.svg",
     "scripts": {
-      "postdeploy": "ts-node ./src/index.ts"
+      "postdeploy": "npm start"
     },
     "buildpacks": [
       {

@@ -1,12 +1,15 @@
 {
-  "dependencies": {
+  "devDependencies": {
     "@sapphire/decorators": "^6.1.0",
     "@sapphire/framework": "^5.2.1",
+    "@sapphire/pieces": "^4.2.2",
     "@sapphire/plugin-logger": "^4.0.2",
+    "@types/node": "^20.12.11",
     "colorette": "^2.0.20",
-    "discord.js": "^14.15.2",
-    "typescript": "^5.4.5"
+    "discord.js": "^14.15.2"
   },
+  "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts"}
+    "start": "ts-node src/index.ts"
+  }
 }

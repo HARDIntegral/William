@@ -6,6 +6,7 @@ import {
     Role, 
     Message 
 } from 'discord.js';
+import { integralID, botRoleID, client } from '..';
 
 @ApplyOptions<Command.Options>({
     name: 'stinkify',
@@ -32,12 +33,18 @@ export class StinkifyCommand extends Command {
         const memberRoleID: string = '1238904839153651733';
         const memberRole: Role = message.guild?.roles.resolve(memberRoleID as `${bigint}`) as Role;
 
-        try {
-            await member.roles.add(pooRole);
-            await member.roles.remove(memberRole);
-            return message.reply(`EWWWW! ${member.user.username} is stinky!`);
-        } catch (error) {
-            return message.reply(`Error: ${error}`);
+        if (member.roles.cache.has(integralID)) {
+            return message.reply('You can\'t stinkify The Honored One!');
+        } else if (member.roles.cache.has(botRoleID)) {
+            return message.reply('You can\'t stinkify me!');
+        } else {
+            try {
+                await member.roles.add(pooRole);
+                await member.roles.remove(memberRole);
+                return message.reply(`EWWWW! ${member.user.username} is stinky!`);
+            } catch (error) {
+                return client.logger.error(`${error}`);
+            }
         }
     }
 }

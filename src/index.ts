@@ -3,7 +3,10 @@ import { GatewayIntentBits } from 'discord.js';
 
 import * as env from '../process.env';
 
-const client = new SapphireClient({
+export const integralID: string = '746483697066180719';
+export const botRoleID: string = '1239085205671772284';
+
+export const client = new SapphireClient({
     defaultPrefix: '$',
     intents: [
         GatewayIntentBits.MessageContent,
