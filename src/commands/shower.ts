@@ -6,6 +6,7 @@ import {
     Role, 
     Message 
 } from 'discord.js';
+import { integralID, client } from '..';
 
 @ApplyOptions<Command.Options>({
     name: 'shower',
@@ -31,13 +32,18 @@ export class ShowerCommand extends Command {
         const pooRole: Role = message.guild?.roles.resolve(pooRoleID as `${bigint}`) as Role;
         const memberRoleID: string = '1238904839153651733';
         const memberRole: Role = message.guild?.roles.resolve(memberRoleID as `${bigint}`) as Role;
-
-        try {
-            await member.roles.add(memberRole);
-            await member.roles.remove(pooRole);
-            return message.reply(`YIPPEE! ${member.user.username} is clean!`);
-        } catch (error) {
-            return message.reply(`Error: ${error}`);
+        
+        if (message.author.id === integralID) {
+            try {
+                await member.roles.add(memberRole);
+                await member.roles.remove(pooRole);
+                return message.reply(`YIPPEE! ${member.user.username} is clean!`);
+            } catch (error) {
+                return client.logger.error(`${error}`);
+            }
+        } else {
+            return message.reply('Nice try!');
         }
+        
     }
 }
