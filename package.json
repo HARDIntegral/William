@@ -11,6 +11,6 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "npm install --save-dev && node src/index.js"
   }
 }
