@@ -6,12 +6,6 @@
     "scripts": {
       "postdeploy": "ts-node ./src/index.ts"
     },
-    "env": {
-      "DISCROD_TOKEN": {
-        "description": "Token to connect to the Discord API",
-        "value": "5"
-      }
-    },
     "buildpacks": [
       {
         "url": "heroku/nodejs"
