@@ -1,1 +1,1 @@
-Worker: npm install && ts-node src/index.ts
+Worker: npm install ts-node --save-dev && ts-node src/index.ts
