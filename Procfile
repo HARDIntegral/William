@@ -1,1 +1,1 @@
-Worker: npm install && node dist/src/index.js
+Worker: npm install && ts-node src/index.ts
