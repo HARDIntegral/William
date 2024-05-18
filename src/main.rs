@@ -1,16 +1,19 @@
-use dotenv::dotenv;
 
+use anyhow::Context as _;
 use poise::serenity_prelude as serenity;
+use shuttle_runtime::SecretStore;
+use shuttle_serenity::ShuttleSerenity;
 
 mod commands;
 mod events;
 mod util;
 
-#[tokio::main]
-async fn main() {
-    dotenv().ok();
-    // Login with a bot token from the environment
-    let token = std::env::var("DISCORD_TOKEN").expect("Expected a token in the environment");
+#[shuttle_runtime::main]
+async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+    // Get the discord token set in `Secrets.toml`
+    let token = secret_store
+        .get("DISCORD_TOKEN")
+        .context("'DISCORD_TOKEN' was not found")?;
     // Set gateway intents, which decides what events the bot will be notified about
     let intents = serenity::GatewayIntents::GUILD_MESSAGES
         | serenity::GatewayIntents::DIRECT_MESSAGES
@@ -44,8 +47,9 @@ async fn main() {
     // Create a new instance of the Client, logging in as a bot.
     let client = serenity::ClientBuilder::new(token, intents)
         .framework(framework)
-        .await;
+        .await
+        .map_err(shuttle_runtime::CustomError::new)?;
 
     // Start listening for events by starting a single shard
-    client.unwrap().start().await.unwrap();  
+    Ok(client.into()) 
 }

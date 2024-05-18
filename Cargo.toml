@@ -1,12 +1,16 @@
 [package]
-name = "William"
+name = "william-bot"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.68"
 dotenv = "0.15.0"
 serenity = "0.12"
 poise = "0.6.1"
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
+shuttle-runtime = "0.45.0"
+shuttle-serenity = "0.45.0"
+tracing = "0.1.37"
