@@ -30,7 +30,11 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
         },
         commands: vec![
             commands::ping::ping(), 
-            commands::age::age()
+            commands::age::age(),
+            commands::susify::susify(),
+            commands::desusify::desusify(),
+            commands::poo::poo(),
+            commands::clean::clean(),
         ],
         event_handler: |ctx, event, framework, data| {
             Box::pin(events::event_handler::event_handler(ctx, event, framework, data))
