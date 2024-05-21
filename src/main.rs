@@ -1,4 +1,5 @@
 
+
 use anyhow::Context as _;
 use poise::serenity_prelude as serenity;
 use shuttle_runtime::SecretStore;
@@ -9,8 +10,23 @@ mod commands;
 mod events;
 mod util;
 
+mod global_state;
+use global_state::TEMP;
+
+async fn get_temp() {
+    loop {
+        let mut temp = TEMP.lock().await;
+        *temp = 0;
+        tokio::time::sleep(
+            std::time::Duration::from_secs(24 * 60 * 60)
+        ).await;
+    }
+}
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+    tokio::spawn(get_temp());
+    
     // Get the discord token set in `Secrets.toml`
     let token = secret_store
         .get("DISCORD_TOKEN")

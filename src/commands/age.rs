@@ -2,7 +2,7 @@ use poise::serenity_prelude as serenity;
 
 use crate::util::*;
 
-#[poise::command(slash_command, prefix_command)]
+#[poise::command(prefix_command, slash_command)]
 pub async fn age(
     ctx: Context<'_>,
     #[description = "Selected user"] user: Option<serenity::User>,

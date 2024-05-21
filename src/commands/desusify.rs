@@ -18,7 +18,7 @@ pub async fn desusify(
 
     let user = user.ok_or("You must provide a user to susify")?;
 
-    let mut member = ctx.guild_id().ok_or("")?.member(ctx.http(), user.id).await?;
+    let member = ctx.guild_id().ok_or("")?.member(ctx.http(), user.id).await?;
     member.remove_role(
         ctx, serenity::model::id::RoleId::new(1240902176381997088)
     ).await?;
