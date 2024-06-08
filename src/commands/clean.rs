@@ -16,7 +16,7 @@ pub async fn clean(
         return Ok(());
     }
 
-    let user = user.ok_or("You must provide a user to susify")?;
+    let user = user.ok_or("You must provide a user to give a shower to")?;
 
     let member = ctx.guild_id().ok_or("")?.member(ctx.http(), user.id).await?;
     member.remove_role(

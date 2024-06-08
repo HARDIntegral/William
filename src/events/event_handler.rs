@@ -21,6 +21,27 @@ pub async fn event_handler(
                 && new_message.author.id.get() != SELF_ID {
                 anon(new_message, ctx).await?;
             }
+            if 
+                new_message.channel_id.get() == 1238638916119040065 ||
+                new_message.channel_id.get() == 1238647629785862225 ||
+                new_message.channel_id.get() == 1238647791954432072 ||
+                new_message.channel_id.get() == 1238904709277024356 && 
+                new_message.author.id.get() != SELF_ID 
+            {
+                log(new_message, ctx).await?;
+            }
+        }
+        serenity::FullEvent::GuildMemberAddition { new_member } => {
+            let channel = serenity::ChannelId::new(1248877341917184112);
+            let msg = MessageBuilder::new()
+                .push("Welcome to the server, ")
+                .push(new_member.user.name.clone())
+                .push("!")
+                .build();
+            channel.say(&ctx.http, msg).await?;
+            new_member.add_role(
+                &ctx.http, serenity::model::id::RoleId::new(1238904839153651733)
+            ).await?;
         }
         _ => {}
     }
@@ -44,6 +65,35 @@ async fn anon (new_message: &serenity::Message, ctx: &serenity::Context) -> Resu
             .build();
         new_message.channel_id.say(&ctx.http, return_msg).await?;
     }
+    Ok(())
+}
+
+async fn log(new_message: &serenity::Message, ctx: &serenity::Context) -> Result<(), Error> {
+    let log_channel = serenity::ChannelId::new(1248837889849032794);
+    let mut log_msg = MessageBuilder::new();
+
+    log_msg
+        .push("User: ")
+        .push(new_message.author.name.clone())
+        .push(" [")
+        .push(new_message.author.id.get().to_string())
+        .push("] \n")
+        .push("Channel: ")
+        .push(new_message.channel_id.to_channel(&ctx.http).await?.guild().unwrap().name.clone())
+        .push(" [")
+        .push(new_message.channel_id.get().to_string())
+        .push("] \n\n")
+        .push("Message Content: \n\"")
+        .push(new_message.content.clone())
+        .push("\"\n");
+
+    for i in new_message.attachments.iter() {
+        log_msg.push("\n")
+            .push(i.url.clone());
+    }
+
+    log_channel.say(&ctx.http, log_msg.push("\n").build()).await?;
+        
     Ok(())
 }
 

@@ -34,6 +34,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     // Set gateway intents, which decides what events the bot will be notified about
     let intents = serenity::GatewayIntents::GUILD_MESSAGES
         | serenity::GatewayIntents::DIRECT_MESSAGES
+        | serenity::GatewayIntents::GUILD_MEMBERS
         | serenity::GatewayIntents::MESSAGE_CONTENT;
     // Set the default prefix for the bot
     let default_prefix = "$";
@@ -51,6 +52,8 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
             commands::desusify::desusify(),
             commands::poo::poo(),
             commands::clean::clean(),
+            commands::censor::censor(),
+            commands::uncensor::uncensor(),
         ],
         event_handler: |ctx, event, framework, data| {
             Box::pin(events::event_handler::event_handler(ctx, event, framework, data))

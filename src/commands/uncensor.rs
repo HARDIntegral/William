@@ -3,7 +3,7 @@ use poise::serenity_prelude as serenity;
 use crate::util::*;
 
 #[poise::command(prefix_command, slash_command)]
-pub async fn desusify(
+pub async fn uncensor(
     ctx: Context<'_>,
     #[description = "Selected user"] user: Option<serenity::User>,
 ) -> Result<(), Error> {
@@ -16,11 +16,11 @@ pub async fn desusify(
         return Ok(());
     }
 
-    let user = user.ok_or("You must provide a user to desusify")?;
+    let user = user.ok_or("You must provide a user to uncensor")?;
 
     let member = ctx.guild_id().ok_or("")?.member(ctx.http(), user.id).await?;
     member.remove_role(
-        ctx, serenity::model::id::RoleId::new(1240902176381997088)
+        ctx, serenity::model::id::RoleId::new(1245954189868400670)
     ).await?;
     ctx.reply("User has been desusified").await?;
     Ok(())
