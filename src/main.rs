@@ -5,6 +5,7 @@ use poise::serenity_prelude as serenity;
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 use std::sync::Arc;
+use poise::serenity_prelude::cache::{Cache, Settings};
 
 mod commands;
 mod events;
@@ -70,7 +71,10 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     .build();
 
     // Create a new instance of the Client, logging in as a bot.
+    let mut settings = serenity::Settings::default();
+    settings.max_messages= 1000;
     let client = serenity::ClientBuilder::new(token, intents)
+        .cache_settings(settings)
         .framework(framework)
         .await
         .map_err(shuttle_runtime::CustomError::new)?;

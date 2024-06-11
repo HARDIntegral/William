@@ -1,5 +1,7 @@
 use poise::serenity_prelude as serenity;
-use serenity::utils::MessageBuilder;
+use poise::serenity_prelude::{CreateEmbed, CreateEmbedFooter, CreateMessage, Message};
+use poise::serenity_prelude::utils::MessageBuilder;
+use poise::serenity_prelude::model::Colour;
 
 use crate::util::*;
 
@@ -13,6 +15,7 @@ pub async fn event_handler(
     data: &Data,
 ) -> Result<(), Error> {
     match event {
+        
         serenity::FullEvent::Ready { data_about_bot, .. } => {
             println!("[INIT] Logged in as {}", data_about_bot.user.name);
         }
@@ -25,12 +28,32 @@ pub async fn event_handler(
                 new_message.channel_id.get() == 1238638916119040065 ||
                 new_message.channel_id.get() == 1238647629785862225 ||
                 new_message.channel_id.get() == 1238647791954432072 ||
+                new_message.channel_id.get() == 1249807583070519367 ||
                 new_message.channel_id.get() == 1238904709277024356 && 
                 new_message.author.id.get() != SELF_ID 
             {
-                log(new_message, ctx).await?;
+                msg_log(new_message, ctx, Colour::from_rgb(0, 255, 0)).await?;
             }
         }
+
+        serenity::FullEvent::MessageDelete { channel_id, deleted_message_id, guild_id} => {
+            let msg = ctx.cache.message(channel_id, deleted_message_id).map(|m| m.clone());
+
+            if let Some(msg) = msg {
+                if 
+                msg.channel_id.get() == 1238638916119040065 ||
+                msg.channel_id.get() == 1238647629785862225 ||
+                msg.channel_id.get() == 1238647791954432072 ||
+                msg.channel_id.get() == 1249807583070519367 ||
+                msg.channel_id.get() == 1238904709277024356 && 
+                msg.author.id.get() != SELF_ID {
+                    msg_log(&msg, ctx, Colour::from_rgb(255, 0, 0)).await?;
+                }
+            } else {
+                println!("Message not found in cache"); 
+            }
+        }
+
         serenity::FullEvent::GuildMemberAddition { new_member } => {
             let channel = serenity::ChannelId::new(1248877341917184112);
             let msg = MessageBuilder::new()
@@ -68,31 +91,32 @@ async fn anon (new_message: &serenity::Message, ctx: &serenity::Context) -> Resu
     Ok(())
 }
 
-async fn log(new_message: &serenity::Message, ctx: &serenity::Context) -> Result<(), Error> {
+async fn msg_log(new_message: &serenity::Message, ctx: &serenity::Context, color: Colour) -> Result<(), Error> {
     let log_channel = serenity::ChannelId::new(1248837889849032794);
-    let mut log_msg = MessageBuilder::new();
 
-    log_msg
-        .push("User: ")
-        .push(new_message.author.name.clone())
-        .push(" [")
-        .push(new_message.author.id.get().to_string())
-        .push("] \n")
-        .push("Channel: ")
-        .push(new_message.channel_id.to_channel(&ctx.http).await?.guild().unwrap().name.clone())
-        .push(" [")
-        .push(new_message.channel_id.get().to_string())
-        .push("] \n\n")
-        .push("Message Content: \n\"")
-        .push(new_message.content.clone())
-        .push("\"\n");
+    let footer = CreateEmbedFooter::new("Timestamp:")
+        .text(new_message.timestamp.to_string());
+    let embed = CreateEmbed::new()
+        .title(new_message.author.name.clone())
+        .field(
+            "Channel: ", 
+            new_message
+                .channel_id
+                .to_channel(&ctx.http)
+                .await?.guild()
+                .unwrap()
+                .name.clone(), 
+            false
+        )
+        .field("Message Content:", new_message.content.clone(), false)
+        .color(color) // Enclose the color value in square brackets
+        .thumbnail(new_message.author.avatar_url().unwrap_or("".to_string()))
+        .footer(footer);
+    
+    let builder = CreateMessage::new()
+        .embed(embed);
 
-    for i in new_message.attachments.iter() {
-        log_msg.push("\n")
-            .push(i.url.clone());
-    }
-
-    log_channel.say(&ctx.http, log_msg.push("\n").build()).await?;
+    log_channel.send_message(&ctx.http, builder).await?;
         
     Ok(())
 }
